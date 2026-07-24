@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Implementación en Producción — Módulo Carga de Producción | Opportunity International Nicaragua</title>
+<style>
+  :root{--oi-teal:#00A7A5;--oi-teal-dark:#00807E;--oi-magenta:#E5087E;--oi-orange:#F58220;--oi-purple:#3A2A50;--ink:#2B2740;--ink-soft:#5C5873;--line:#E4E2EC;--bg:#FBFBFD;--teal-tint:#E6F6F6;--magenta-tint:#FDE9F3;--orange-tint:#FEF1E3;--code-bg:#2B2740;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Open Sans","Segoe UI",-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.62;font-size:15px}
+  .brandbar{height:6px;background:linear-gradient(90deg,var(--oi-orange) 0%,var(--oi-orange) 25%,var(--oi-magenta) 25%,var(--oi-magenta) 60%,var(--oi-teal) 60%,var(--oi-teal) 100%)}
+  .nav{background:#fff;border-bottom:1px solid var(--line);padding:11px 6%;font-size:12.5px;display:flex;gap:18px;flex-wrap:wrap;position:sticky;top:0;z-index:9}
+  .nav a{color:var(--ink-soft);text-decoration:none;font-weight:600}.nav a:hover{color:var(--oi-magenta)}
+  .nav a.here{color:var(--oi-purple);border-bottom:2px solid var(--oi-magenta);padding-bottom:2px}
+  header{background:var(--oi-purple);color:#fff;padding:46px 6%}
+  header .doc-tag{display:inline-block;background:var(--oi-magenta);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+  header h1{font-size:29px;font-weight:700;line-height:1.25;max-width:900px}
+  header p.sub{margin-top:13px;color:#CFC8DE;font-size:15.5px;max-width:840px}
+  header .meta{margin-top:24px;display:flex;flex-wrap:wrap;gap:32px;font-size:13px;color:#B9B0CC}
+  header .meta b{display:block;color:#fff;font-size:14px;font-weight:600}
+  main{padding:42px 6% 72px;max-width:1140px;margin:0 auto}
+  h2{color:#fff;background:var(--oi-purple);font-size:17px;margin:40px 0 4px;padding:11px 18px;border-radius:9px 9px 0 0}
+  h2:first-of-type{margin-top:0}
+  h2 .p{background:rgba(255,255,255,.18);padding:2px 10px;border-radius:14px;font-size:12px;margin-right:10px;letter-spacing:.5px}
+  .sec{background:#fff;border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;padding:18px 22px;margin-bottom:8px}
+  h3{color:var(--oi-teal-dark);font-size:15.5px;margin:20px 0 6px}
+  p{margin:9px 0}.lead{font-size:16px;color:var(--ink-soft)}
+  ul,ol{margin:8px 0 8px 22px}li{margin:5px 0}
+  code{background:#EEECF4;color:#6E2A66;padding:1px 6px;border-radius:4px;font-family:"Consolas","Monaco",monospace;font-size:12.5px;word-break:break-all}
+  pre{background:var(--code-bg);color:#E8E6F0;padding:13px 16px;border-radius:9px;overflow-x:auto;margin:10px 0;font-family:"Consolas","Monaco",monospace;font-size:12px;line-height:1.55}
+  .paso{border-left:4px solid var(--oi-teal);background:#FCFDFE;border-radius:0 9px 9px 0;padding:12px 18px;margin:14px 0}
+  .paso .num{display:inline-block;background:var(--oi-teal);color:#fff;font-weight:800;font-size:12px;padding:2px 11px;border-radius:14px;margin-bottom:5px}
+  .paso h4{color:var(--oi-purple);font-size:14.5px;margin:3px 0 5px}
+  .ruta{background:var(--teal-tint);border-radius:6px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--oi-teal-dark);margin:7px 0;display:inline-block}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;border-radius:9px;overflow:hidden;box-shadow:0 1px 3px rgba(58,42,80,.06)}
+  th{background:var(--oi-purple);color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:12px}
+  td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#FAFAFC}
+  .campo{font-family:"Consolas",monospace;font-size:12px;background:#F3F1F8;padding:1px 5px;border-radius:3px}
+  .note{background:var(--orange-tint);border-left:4px solid var(--oi-orange);padding:12px 16px;border-radius:0 9px 9px 0;margin:13px 0;font-size:13.5px}
+  .ok{background:var(--teal-tint);border-left:4px solid var(--oi-teal);padding:12px 16px;border-radius:0 9px 9px 0;margin:13px 0;font-size:13.5px}
+  .stop{background:var(--magenta-tint);border-left:4px solid var(--oi-magenta);padding:12px 16px;border-radius:0 9px 9px 0;margin:13px 0;font-size:13.5px}
+  .stop b,.note b,.ok b{display:block;margin-bottom:3px}
+  .chk{list-style:none;margin:8px 0;padding:0}
+  .chk li{padding-left:26px;position:relative;margin:6px 0}
+  .chk li::before{content:"\2610";position:absolute;left:0;top:-1px;color:var(--oi-magenta);font-size:16px}
+  .tiempo{display:inline-block;background:#F3F1F8;color:var(--ink-soft);font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:12px;margin-left:8px}
+  footer{background:var(--oi-purple);color:#B9B0CC;text-align:center;padding:24px;font-size:12.5px;margin-top:40px}footer b{color:#fff}
+  @media print{.nav{display:none}pre{white-space:pre-wrap}.paso,.sec{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="brandbar"></div>
+<nav class="nav">
+  <a href="index.html">Inicio</a>
+  <a href="reporte_ejecutivo.html">Reporte Ejecutivo</a>
+  <a href="resumen_tecnico.html">Resumen Técnico</a>
+  <a href="paso_a_paso.html">Paso a Paso (Sandbox)</a>
+  <a href="proximos_pasos_produccion.html">Plan de Producción</a>
+  <a href="guia_implementacion_produccion.html" class="here">Guía de Implementación (Producción)</a>
+</nav>
+<header>
+  <span class="doc-tag">Documento 5 · Guía de Implementación en Producción</span>
+  <h1>Manual de instalación paso a paso — ambiente productivo</h1>
+  <p class="sub">Instrucciones granulares para replicar en Producción el módulo ya validado en Sandbox. Escrito para ejecutarse con rol de Administrador, sin necesidad de modificar código: los identificadores de Producción fueron verificados y coinciden en su totalidad con Sandbox.</p>
+  <div class="meta">
+    <div><b>Rol requerido</b>Administrador</div>
+    <div><b>Duración estimada</b>35–45 minutos</div>
+    <div><b>Archivos a instalar</b>4 scripts SuiteScript 2.1</div>
+    <div><b><span style="color:#7FDAD8">IDs de Producción verificados ✓</span></b>Sin cambios de código</div>
+  </div>
+</header>
+<main>
+
+<!-- ==================== PARTE 0 ==================== -->
+<h2><span class="p">PARTE 0</span>Antes de empezar <span class="tiempo">5 min</span></h2>
+<div class="sec">
+  <p class="lead">Esta parte no modifica nada: solo confirma que todo está en orden para instalar con tranquilidad.</p>
+
+  <div class="stop"><b>⚠ Advertencia importante sobre el ambiente productivo</b>
+  A diferencia de Sandbox, en Producción el módulo <b>crea transacciones reales con impacto en inventario y contabilidad</b>: una Orden de Trabajo liberada, su Compleción (que descarga materia prima e insumos, e ingresa producto terminado) y los ajustes automáticos de fibra y cáscara. Por eso: instale primero (Partes 1 a 4), haga la prueba de humo (Parte 5) que <b>no crea nada</b>, y recién después procese una orden real acompañado (Parte 6).</div>
+
+  <div class="paso"><span class="num">PASO 0.1</span>
+    <h4>Ingresar a Producción con rol Administrador</h4>
+    <p>Inicie sesión en la cuenta productiva de NetSuite. Confirme arriba a la derecha que <b>NO</b> aparece la marca "Sandbox". Cambie su rol a <b>Administrador</b> haciendo clic en su nombre (esquina superior derecha) y seleccionándolo de la lista de roles.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 0.2</span>
+    <h4>Tener los 4 archivos a la mano</h4>
+    <p>Descargue a su computadora los archivos de la carpeta <code>src</code> del proyecto:</p>
+    <ul>
+      <li><code>oi_lib_produccion.js</code> — librería (lógica del módulo)</li>
+      <li><code>oi_sl_carga_produccion.js</code> — Suitelet (la interfaz)</li>
+      <li><code>oi_ue_wo_boton_carga.js</code> — User Event (el botón en la OT)</li>
+      <li><code>oi_cs_wo_boton_carga.js</code> — Client Script (auxiliar del botón)</li>
+    </ul>
+    <div class="note"><b>Use la versión más reciente</b>Asegúrese de tomar los archivos entregados después de la validación en Producción del 24/07/2026 (ya no intentan escribir los campos de fórmula del Mass Balance).</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 0.3</span>
+    <h4>Averiguar el tipo de centro del rol Coordinador de Producción</h4>
+    <p>Dato necesario para la Parte 4. Se obtiene en 3 clics:</p>
+    <div class="ruta">Configuración → Usuarios/roles → Gestionar roles</div>
+    <p>Busque en la lista el rol <b>Coordinador de Producción</b> y lea la columna <b>TIPO DE CENTRO</b>. Anótelo (en Sandbox es <b>Centro clásico</b>; lo más probable es que en Producción sea el mismo).</p>
+    <p><b>Anote aquí:</b> Tipo de centro = ____________________</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 0.4</span>
+    <h4>Elegir el momento adecuado</h4>
+    <p>Instale cuando <b>nadie esté registrando una orden de producción</b> en ese momento (idealmente fuera del horario de cierre diario). La instalación en sí no interfiere, pero el User Event agrega un botón a la Orden de Trabajo y conviene evitar que alguien esté a media captura.</p>
+  </div>
+</div>
+
+<!-- ==================== PARTE 1 ==================== -->
+<h2><span class="p">PARTE 1</span>Subir los archivos al File Cabinet <span class="tiempo">6 min</span></h2>
+<div class="sec">
+  <div class="stop"><b>Regla crítica</b>Los 4 archivos deben quedar <b>en la misma carpeta</b>. Se referencian entre sí por ruta relativa; si los separa, el módulo no cargará.</div>
+
+  <div class="paso"><span class="num">PASO 1.1</span>
+    <h4>Abrir el File Cabinet</h4>
+    <div class="ruta">Documentos → Archivos → Archivos del sistema de archivos</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 1.2</span>
+    <h4>Entrar a la carpeta SuiteScripts</h4>
+    <p>En el árbol de carpetas de la izquierda, haga clic en <b>SuiteScripts</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 1.3</span>
+    <h4>Crear la carpeta del módulo</h4>
+    <p>Botón <b>Nueva carpeta</b>. Nombre exacto: <code>OI_CargaProduccion</code>. Guardar.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 1.4</span>
+    <h4>Entrar a la carpeta recién creada</h4>
+    <p>Haga clic en <b>OI_CargaProduccion</b>. La ruta superior debe mostrar: <code>SuiteScripts &gt; OI_CargaProduccion</code>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 1.5</span>
+    <h4>Subir los 4 archivos, uno por uno</h4>
+    <p>Botón <b>Agregar archivo</b> → seleccionar el archivo → subir. Repita para los 4.</p>
+    <p>Orden sugerido (no es obligatorio): librería, Suitelet, User Event, Client Script.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 1.6</span>
+    <h4>Verificar</h4>
+    <p>La carpeta debe mostrar <b>Total: 4</b> archivos, los cuatro con tipo "Archivo JavaScript".</p>
+  </div>
+</div>
+
+<!-- ==================== PARTE 2 ==================== -->
+<h2><span class="p">PARTE 2</span>Crear el Script del Suitelet (la interfaz) <span class="tiempo">8 min</span></h2>
+<div class="sec">
+  <div class="paso"><span class="num">PASO 2.1</span>
+    <h4>Nuevo script</h4>
+    <div class="ruta">Personalización → Scripting → Scripts → Nuevo</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 2.2</span>
+    <h4>Seleccionar el archivo</h4>
+    <p>En el campo <b>ARCHIVO DE SCRIPT</b>, elija <code>oi_sl_carga_produccion.js</code> (dentro de <code>SuiteScripts/OI_CargaProduccion</code>). Luego clic en <b>Crear registro de script</b>.</p>
+    <p>NetSuite detectará automáticamente el tipo: <b>Suitelet</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 2.3</span>
+    <h4>Nombrar el script</h4>
+    <table>
+      <tr><th>Campo</th><th>Valor a escribir</th></tr>
+      <tr><td>NOMBRE</td><td><span class="campo">OI - Carga de Producción (Suitelet)</span></td></tr>
+      <tr><td>ID</td><td><span class="campo">_oi_sl_carga_prod</span></td></tr>
+    </table>
+    <div class="note"><b>Sobre el ID</b>Escriba exactamente <code>_oi_sl_carga_prod</code> (con el guion bajo inicial). NetSuite le antepone el prefijo y quedará como <code>customscript_oi_sl_carga_prod</code>. Este nombre <b>debe ser idéntico</b>, porque el User Event lo usa para encontrar el Suitelet.</div>
+    <p>Clic en <b>Guardar</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 2.4</span>
+    <h4>Crear el despliegue (deployment)</h4>
+    <p>Ya guardado el script, vaya a la subpestaña <b>Despliegues</b> y complete la línea:</p>
+    <table>
+      <tr><th>Campo</th><th>Valor</th></tr>
+      <tr><td>TÍTULO</td><td><span class="campo">OI - Carga de Producción</span></td></tr>
+      <tr><td>ID</td><td><span class="campo">_oi_sl_carga_prod</span></td></tr>
+      <tr><td>DESPLEGADOS (casilla)</td><td>Marcada ✓</td></tr>
+      <tr><td>ESTADO</td><td><b>Liberado</b> (Released)</td></tr>
+      <tr><td>NIVEL DE REGISTRO</td><td><b>Auditoría</b></td></tr>
+      <tr><td>EJECUTAR COMO ROL</td><td>Rol actual</td></tr>
+      <tr><td>DISPONIBLE SIN INICIO DE SESIÓN</td><td><b>Desmarcada</b> (debe requerir login)</td></tr>
+    </table>
+    <div class="note"><b>Diferencia con Sandbox</b>En Sandbox se usó estado <i>Pruebas</i> + log <i>Depurar</i> para las pruebas iniciales. En Producción va directo a <b>Liberado + Auditoría</b>, porque el módulo ya está validado y debe estar disponible para el equipo.</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 2.5</span>
+    <h4>Definir la audiencia</h4>
+    <p>En la subpestaña <b>Audiencia</b> del despliegue, en <b>ROLES INTERNOS</b> seleccione:</p>
+    <ul>
+      <li><b>Coordinador de Producción</b> (quienes registran la producción diaria)</li>
+      <li><b>OI Gerencia Finanzas Producción</b> (supervisión)</li>
+      <li>Administrador (opcional; suele tener acceso implícito)</li>
+    </ul>
+    <div class="note"><b>Recomendación</b>Marque el <b>rol</b>, no empleados individuales. Así cualquier persona que tenga ese rol podrá usar el módulo sin configuración adicional.</div>
+    <p>Clic en <b>Guardar</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 2.6</span>
+    <h4>COPIAR LA URL DEL SUITELET (dato indispensable)</h4>
+    <p>Abra de nuevo el despliegue que acaba de guardar. Busque el campo <b>URL</b>, que se ve así:</p>
+    <pre>/app/site/hosting/scriptlet.nl?script=####&amp;deploy=1</pre>
+    <p>Cópiela completa y guárdela en un bloc de notas. La necesitará en la Parte 4.</p>
+    <div class="stop"><b>La URL de Producción es DIFERENTE a la de Sandbox</b>El número de <code>script=</code> lo asigna cada cuenta por separado (en Sandbox fue 1907). <b>No reutilice la URL de Sandbox</b>: use la que aparece aquí, en Producción.</div>
+    <p><b>Anote aquí:</b> URL = ______________________________________________</p>
+  </div>
+</div>
+
+<!-- ==================== PARTE 3 ==================== -->
+<h2><span class="p">PARTE 3</span>Crear el Script User Event (botón en la Orden de Trabajo) <span class="tiempo">6 min</span></h2>
+<div class="sec">
+  <div class="paso"><span class="num">PASO 3.1</span>
+    <h4>Nuevo script</h4>
+    <div class="ruta">Personalización → Scripting → Scripts → Nuevo</div>
+    <p>En <b>ARCHIVO DE SCRIPT</b> elija <code>oi_ue_wo_boton_carga.js</code> → <b>Crear registro de script</b>. NetSuite detectará el tipo <b>Evento del usuario</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 3.2</span>
+    <h4>Nombrar el script</h4>
+    <table>
+      <tr><th>Campo</th><th>Valor</th></tr>
+      <tr><td>NOMBRE</td><td><span class="campo">OI - Botón Carga de Producción (UE)</span></td></tr>
+      <tr><td>ID</td><td><span class="campo">_oi_ue_wo_carga_btn</span></td></tr>
+    </table>
+    <p>Clic en <b>Guardar</b>.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 3.3</span>
+    <h4>Crear el despliegue</h4>
+    <p>Subpestaña <b>Despliegues</b> (o botón <b>Desplegar script</b>) y complete:</p>
+    <table>
+      <tr><th>Campo</th><th>Valor</th></tr>
+      <tr><td>SE APLICA A</td><td><b>Orden de trabajo</b></td></tr>
+      <tr><td>ID</td><td><span class="campo">_oi_ue_wo_carga_btn</span></td></tr>
+      <tr><td>DESPLEGADOS</td><td>Marcada ✓</td></tr>
+      <tr><td>ESTADO</td><td><b>Liberado</b></td></tr>
+      <tr><td>NIVEL DE REGISTRO</td><td><b>Auditoría</b></td></tr>
+      <tr><td>Audiencia (ROLES INTERNOS)</td><td>Coordinador de Producción y OI Gerencia Finanzas Producción</td></tr>
+    </table>
+    <p>Clic en <b>Guardar</b>.</p>
+  </div>
+
+  <div class="ok"><b>El Client Script no requiere registro</b>El archivo <code>oi_cs_wo_boton_carga.js</code> no necesita script record ni despliegue: el User Event lo carga solo, por ruta relativa. Basta con que esté en la misma carpeta (Parte 1).</div>
+</div>
+
+<!-- ==================== PARTE 4 ==================== -->
+<h2><span class="p">PARTE 4</span>Crear el acceso en el menú <span class="tiempo">8 min</span></h2>
+<div class="sec">
+  <p class="lead">Este es el acceso principal: permite abrir el módulo sin entrar a una Orden de Trabajo específica. Son dos configuraciones: primero el <b>vínculo</b>, luego la <b>categoría</b> que lo coloca en el menú.</p>
+  <div class="note"><b>¿Por qué no un botón en la lista de Órdenes de Trabajo?</b>NetSuite no permite agregar botones nativos en las páginas de lista estándar. Este enlace de menú es la alternativa soportada por Oracle, y queda junto al menú de Fabricación.</div>
+
+  <h3>4.A — Crear el vínculo</h3>
+  <div class="paso"><span class="num">PASO 4.1</span>
+    <h4>Nuevo vínculo de centro</h4>
+    <div class="ruta">Configuración → Personalización → Vínculos centrales → Nuevo</div>
+  </div>
+  <div class="paso"><span class="num">PASO 4.2</span>
+    <h4>Completar y guardar</h4>
+    <table>
+      <tr><th>Campo</th><th>Valor</th></tr>
+      <tr><td>ETIQUETA</td><td><span class="campo">Carga de Producción</span></td></tr>
+      <tr><td>URL</td><td>La URL de Producción que copió en el <b>PASO 2.6</b></td></tr>
+    </table>
+    <p>Clic en <b>Guardar</b>. NetSuite le asignará un ID interno (tipo <code>custlink_...</code>); no necesita anotarlo.</p>
+  </div>
+
+  <h3>4.B — Colocarlo en el menú</h3>
+  <div class="paso"><span class="num">PASO 4.3</span>
+    <h4>Nueva categoría de centro</h4>
+    <div class="ruta">Configuración → Personalización → Categorías del centro → Nuevo</div>
+  </div>
+  <div class="paso"><span class="num">PASO 4.4</span>
+    <h4>Completar en este orden (los campos dependen entre sí)</h4>
+    <table>
+      <tr><th>#</th><th>Campo</th><th>Valor</th></tr>
+      <tr><td>1</td><td>TIPO DE CENTRO</td><td>El que anotó en el <b>PASO 0.3</b> (en Sandbox: <b>Centro clásico</b>)</td></tr>
+      <tr><td>2</td><td>FICHA CENTRAL</td><td><b>Transacciones</b></td></tr>
+      <tr><td>3</td><td>ETIQUETA</td><td><span class="campo">Producción</span> (nombre del grupo en el menú)</td></tr>
+      <tr><td>4</td><td>ID (opcional)</td><td><span class="campo">_oi_cat_carga_prod</span></td></tr>
+      <tr><td>5</td><td>Sublista VÍNCULO</td><td>Buscar y seleccionar <b>Carga de Producción</b>, luego clic en <b>Agregar</b></td></tr>
+      <tr><td>6</td><td>Columna ETIQUETA de la fila</td><td><span class="campo">Carga de Producción</span></td></tr>
+    </table>
+    <div class="stop"><b>Elija primero el TIPO DE CENTRO</b>El desplegable "Ficha central" se llena según el tipo de centro elegido. Si escoge un centro que el rol no usa, el enlace no aparecerá en el menú.</div>
+    <p>Clic en <b>Guardar</b>.</p>
+  </div>
+  <div class="paso"><span class="num">PASO 4.5</span>
+    <h4>Verificar</h4>
+    <p>Recargue la página con <b>F5</b> y abra el menú <b>Transacciones</b>. Debe aparecer el grupo <b>Producción</b> con el enlace <b>Carga de Producción</b> dentro.</p>
+  </div>
+</div>
+
+<!-- ==================== PARTE 5 ==================== -->
+<h2><span class="p">PARTE 5</span>Prueba de humo (no crea transacciones) <span class="tiempo">5 min</span></h2>
+<div class="sec">
+  <div class="ok"><b>Esta parte es segura</b>Solo se verifica que la interfaz abra y lea correctamente. Cargar un archivo y validar inventario <b>NO crea ni modifica nada</b> en NetSuite: son consultas de lectura.</div>
+
+  <div class="paso"><span class="num">PASO 5.1</span>
+    <h4>Probar el botón en una Orden de Trabajo</h4>
+    <div class="ruta">Transacciones → Fabricación → Lista</div>
+    <p>Abra cualquier Orden de Trabajo existente con <b>Ver</b>. Arriba, junto a <i>Editar / Atrás / Acciones</i>, debe aparecer el botón <b>Carga de Producción</b>. Haga clic: debe abrir el módulo en una pestaña nueva.</p>
+    <div class="note"><b>Comportamiento normal</b>El botón aparece al <b>ver o editar</b> una Orden de Trabajo existente, no al crear una nueva.</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 5.2</span>
+    <h4>Probar el enlace del menú</h4>
+    <div class="ruta">Transacciones → Producción → Carga de Producción</div>
+    <p>Debe abrir la misma interfaz, con la sección <b>ARCHIVO DE PRODUCCIÓN</b> visible.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 5.3</span>
+    <h4>Probar la lectura de inventario (sin procesar)</h4>
+    <p>Genere el archivo del día desde Google Sheets (menú <b>OI Producción → Generar JSON para NetSuite</b>) y cárguelo en el módulo. Debe verse la previsualización con la cabecera, los lotes de producto terminado y la materia prima.</p>
+    <p>Haga clic en <b>Validar inventario</b> y revise la tabla de diagnóstico:</p>
+    <ul>
+      <li><b>Verde (OK)</b> — el lote existe, está aprobado y tiene stock suficiente.</li>
+      <li><b>Ámbar (REVISAR)</b> — hay menos disponible que lo estimado; se usará el disponible del ERP.</li>
+      <li><b>Rojo (BLOQUEO)</b> — el lote no existe, no tiene stock aprobado o está en <i>Inspection</i>. El proceso queda bloqueado.</li>
+    </ul>
+    <div class="stop"><b>DETÉNGASE AQUÍ</b>No presione "Procesar Orden de Trabajo" todavía. Continúe con la Parte 6 solo cuando vaya a registrar una orden real y con acompañamiento.</div>
+  </div>
+</div>
+
+<!-- ==================== PARTE 6 ==================== -->
+<h2><span class="p">PARTE 6</span>Primera orden real (crea transacciones) <span class="tiempo">15 min</span></h2>
+<div class="sec">
+  <div class="stop"><b>Punto de no retorno</b>A partir de aquí se crean transacciones reales. Ejecútelo con el día de producción que corresponda registrar, verificando antes que <b>esa orden no haya sido creada ya manualmente</b> (para no duplicar).</div>
+
+  <div class="paso"><span class="num">PASO 6.1</span>
+    <h4>Confirmar que el día no está registrado</h4>
+    <div class="ruta">Transacciones → Fabricación → Lista</div>
+    <p>Revise que no exista una Orden de Trabajo con la nota <code>Producción DD/MM/AAAA SKU-XX - PR</code> de la fecha que va a procesar.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.2</span>
+    <h4>Generar el archivo del día</h4>
+    <p>En Google Sheets, con la hoja del día lista: menú <b>OI Producción → Generar JSON para NetSuite</b>. Revise los KPIs del diálogo (fecha, SKU, Input, Output, FC). Ajuste las cantidades de materia prima si lo requiere, y descargue el archivo.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.3</span>
+    <h4>Cargar y validar en NetSuite</h4>
+    <p>Abra el módulo, suba el archivo, revise la previsualización y presione <b>Validar inventario</b>. Confirme que no haya bloqueos (rojo). Revise los avisos ámbar y decida si son aceptables.</p>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.4</span>
+    <h4>Procesar</h4>
+    <p>Deje marcadas ambas casillas (<b>Crear también la Compleción</b> y <b>Ajustar FC automáticamente</b>) y presione <b>Procesar Orden de Trabajo</b>. Confirme en el mensaje de advertencia.</p>
+    <p>Al terminar, la interfaz muestra los pasos ejecutados y enlaces a la <b>Orden de Trabajo</b> y la <b>Compleción</b> creadas. <b>Anote ambos números.</b></p>
+    <div class="note"><b>No cierre la ventana mientras procesa</b>El proceso realiza varios guardados en secuencia (crear, ajustar FC, materia seca, liberar, completar). Tarda unos segundos.</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.5</span>
+    <h4>Verificar la Orden de Trabajo creada</h4>
+    <p>Abra la OT desde el enlace y compruebe:</p>
+    <table>
+      <tr><th>Qué revisar</th><th>Valor esperado</th></tr>
+      <tr><td>Estado</td><td>Liberada</td></tr>
+      <tr><td>Formulario personalizado</td><td>OI - Orden de Trabajo-Gerencia</td></tr>
+      <tr><td>Ensamblaje / Lista de materiales / Ruta</td><td>Según el SKU (01-01-COV + BOM COV + RUTA FP COV, etc.)</td></tr>
+      <tr><td>Cantidad y Cantidad Real</td><td>Igual al Output (kg) del día</td></tr>
+      <tr><td>Nota</td><td><code>Producción DD/MM/AAAA SKU-XX - PR</code></td></tr>
+      <tr><td>Tipo/Cantidad de Cáscara y Fibra</td><td>Según el archivo (Fibra-41 o 44)</td></tr>
+      <tr><td>Subficha <b>Mass Balance</b> → FC Empaque</td><td><b>Igual al FC (Bruto)</b> del Google Sheet</td></tr>
+      <tr><td>Subficha <b>Mass Balance</b> → Materia Seca Ponderada</td><td>Un renglón por lote, con sus QQ y % MS</td></tr>
+      <tr><td>Subficha <b>Artículos</b></td><td>Materia prima + MS-53 (o MS-04 si SKU 21) + MS-18 + MS-02</td></tr>
+    </table>
+    <div class="ok"><b>El FC es la verificación estrella</b>Si el FC Empaque coincide con el FC (Bruto) de la hoja, significa que todo el Mass Balance quedó correctamente calculado.</div>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.6</span>
+    <h4>Verificar la Compleción creada</h4>
+    <p>Abra la Compleción y compruebe:</p>
+    <table>
+      <tr><th>Qué revisar</th><th>Valor esperado</th></tr>
+      <tr><td>Postconsumo</td><td>Marcado</td></tr>
+      <tr><td>Creado desde</td><td>La Orden de Trabajo del paso anterior</td></tr>
+      <tr><td>Subficha Operaciones</td><td>1440 minutos en ejecución de máquina y mano de obra (4 operaciones)</td></tr>
+      <tr><td>Componente de materia prima → Detalle de inventario</td><td>Un renglón por lote y clase (B/C), estado Approved</td></tr>
+      <tr><td>Insumos MS</td><td>Solo cantidad (el inventario se descarga automáticamente)</td></tr>
+      <tr><td>Detalle de inventario del ensamble (PT)</td><td>Lotes en depósito <b>Producto Terminado</b>, estado <b>Inspection</b>, caducidad = fecha + 2 años</td></tr>
+    </table>
+  </div>
+
+  <div class="paso"><span class="num">PASO 6.7</span>
+    <h4>Verificar los ajustes de subproductos</h4>
+    <p>En la OT, subficha <b>Registros relacionados</b>: deben aparecer <b>Cascara Adjustment</b> y <b>Fibra Adjustment</b> (transacciones de inventario). Los genera el script GTZ existente, igual que en el proceso manual.</p>
+    <div class="note"><b>Punto abierto con Contabilidad</b>Estos ajustes postean a la cuenta <b>1800-00-000 Inventory In Transit</b>, que es la que ya venía usándose en el proceso manual. Si Contabilidad determina otra cuenta, es un ajuste en el script GTZ existente, independiente de este módulo.</div>
+  </div>
+</div>
+
+<!-- ==================== PARTE 7 ==================== -->
+<h2><span class="p">PARTE 7</span>Si algo sale mal <span class="tiempo">referencia</span></h2>
+<div class="sec">
+  <h3>Cómo desactivar el módulo rápidamente</h3>
+  <p>Si necesita detener el uso del módulo sin borrar nada:</p>
+  <ol>
+    <li>Vaya a <b>Personalización → Scripting → Despliegues de script</b>.</li>
+    <li>Abra el despliegue del Suitelet (<code>customdeploy_oi_sl_carga_prod</code>) → <b>Editar</b>.</li>
+    <li>Cambie <b>ESTADO</b> a <b>Pruebas</b> (así solo el propietario lo verá) o desmarque <b>DESPLEGADOS</b> (lo desactiva por completo).</li>
+    <li>Guarde. Repita con el despliegue del User Event si desea quitar también el botón.</li>
+  </ol>
+  <div class="ok"><b>Las transacciones ya creadas no se afectan</b>Desactivar el módulo no altera las Órdenes de Trabajo ni Compleciones existentes.</div>
+
+  <h3>Si el proceso se interrumpe a medio camino</h3>
+  <p>El módulo ejecuta los pasos en secuencia y reporta hasta dónde llegó. Escenarios:</p>
+  <table>
+    <tr><th>Situación</th><th>Qué hacer</th></tr>
+    <tr><td>Se creó la OT pero no la Compleción</td><td>La interfaz muestra el enlace a la OT. Puede completarla manualmente con el botón "Introducir elemento completado con postconsumo", siguiendo el procedimiento habitual.</td></tr>
+    <tr><td>La OT quedó Planificada (no liberada)</td><td>Ábrala, cambie el formulario a <i>OI - Orden de Trabajo-Gerencia</i> y el estado a <i>Liberada</i>, y guarde.</td></tr>
+    <tr><td>Se procesó por error / datos equivocados</td><td>Anule o elimine las transacciones (Compleción primero, luego la OT) con el rol autorizado, y vuelva a procesar con el archivo corregido.</td></tr>
+  </table>
+
+  <h3>Dónde ver los errores</h3>
+  <div class="ruta">Personalización → Scripting → Registros de ejecuciones de scripts</div>
+  <p>Filtre por el script del Suitelet. Con nivel <b>Auditoría</b> se registra cada paso del proceso. La interfaz también muestra en pantalla cualquier error con su mensaje.</p>
+
+  <h3>Problemas frecuentes</h3>
+  <table>
+    <tr><th>Síntoma</th><th>Causa probable / solución</th></tr>
+    <tr><td>El botón no aparece en la OT</td><td>Verifique que el despliegue del User Event esté <b>Liberado</b>, marcado como <b>Desplegado</b> y aplicado a "Orden de trabajo".</td></tr>
+    <tr><td>Error "módulo no encontrado" al abrir</td><td>Los 4 archivos no están en la misma carpeta <code>OI_CargaProduccion</code>.</td></tr>
+    <tr><td>El enlace del menú no abre el módulo</td><td>La URL del vínculo no es la de Producción. Corríjala con la del PASO 2.6.</td></tr>
+    <tr><td>El enlace no aparece en el menú</td><td>El tipo de centro de la categoría no coincide con el del rol. Revise el PASO 0.3.</td></tr>
+    <tr><td>Todos los lotes salen en rojo</td><td>Los lotes del archivo no existen en Producción o no tienen stock aprobado. Verifique el número de lote en la hoja.</td></tr>
+  </table>
+</div>
+
+<!-- ==================== PARTE 8 ==================== -->
+<h2><span class="p">PARTE 8</span>Después de implementar <span class="tiempo">primeros días</span></h2>
+<div class="sec">
+  <div class="paso"><span class="num">PASO 8.1</span>
+    <h4>Instalar el generador de JSON en Google Sheets</h4>
+    <p>Si aún no está instalado: en la hoja de producción, <b>Extensiones → Apps Script</b>, pegar el archivo <code>GeneradorJSON_Produccion.gs</code>, guardar y recargar la hoja. Aparecerá el menú <b>OI Producción</b>.</p>
+  </div>
+  <div class="paso"><span class="num">PASO 8.2</span>
+    <h4>Capacitar al equipo</h4>
+    <p>Muestre el flujo completo a los coordinadores: generar JSON en Sheets → cargar en NetSuite → validar → procesar → verificar. Enfatice que <b>si hay bloqueos rojos no se debe procesar</b>.</p>
+  </div>
+  <div class="paso"><span class="num">PASO 8.3</span>
+    <h4>Monitorear los primeros días</h4>
+    <p>Durante la primera semana, revise diariamente los registros de ejecución y compare el FC de cada orden creada contra el reporte del día. Si todo cuadra, el módulo queda en operación normal.</p>
+  </div>
+  <div class="paso"><span class="num">PASO 8.4</span>
+    <h4>Convivencia con el proceso manual</h4>
+    <p>El módulo no impide seguir creando órdenes a mano. Durante la transición pueden coexistir; solo evite registrar el mismo día por ambas vías.</p>
+  </div>
+</div>
+
+<!-- ==================== ANEXO ==================== -->
+<h2><span class="p">ANEXO</span>Resumen de lo que se crea e IDs verificados</h2>
+<div class="sec">
+  <h3>Elementos que esta guía crea en Producción</h3>
+  <table>
+    <tr><th>Elemento</th><th>Identificador</th></tr>
+    <tr><td>Carpeta en File Cabinet</td><td><code>SuiteScripts/OI_CargaProduccion/</code> (4 archivos)</td></tr>
+    <tr><td>Script Suitelet</td><td><code>customscript_oi_sl_carga_prod</code></td></tr>
+    <tr><td>Despliegue Suitelet</td><td><code>customdeploy_oi_sl_carga_prod</code> · Liberado · Auditoría</td></tr>
+    <tr><td>Script User Event</td><td><code>customscript_oi_ue_wo_carga_btn</code></td></tr>
+    <tr><td>Despliegue User Event</td><td><code>customdeploy_oi_ue_wo_carga_btn</code> · Orden de trabajo · Liberado</td></tr>
+    <tr><td>Vínculo de centro</td><td>Etiqueta "Carga de Producción" → URL del Suitelet</td></tr>
+    <tr><td>Categoría del centro</td><td>Grupo "Producción" en ficha Transacciones</td></tr>
+  </table>
+
+  <h3>IDs de Producción verificados el 24/07/2026 (no requieren cambios)</h3>
+  <p>Se confirmaron por consulta directa a la cuenta productiva: ítems MS-02 (94), MS-04 (511), MS-18 (566), MS-53 (1142); materia prima 05-MP-C (3840) y 06-MP-O (3842); ensambles 3852 / 3853 / 3855; subproductos 3857 / 3858 / 3859; ubicación 4; departamento 17; depósitos 14 (Clase B), 20 (Clase C), 21 (Producto Terminado); estados 1 (Approved) y 5 (Inspection); formularios 109 / 138 / 111; BOM 13 / 14; rutas 20 / 21; lista SKU 1→01, 2→04, 3→21; y el registro <code>customrecord_gtz_dry_matter_calculated</code> con sus cuatro campos.</p>
+
+  <h3>Checklist final de implementación</h3>
+  <ul class="chk">
+    <li>Rol Administrador activo en la cuenta de Producción (no Sandbox).</li>
+    <li>4 archivos subidos en <code>SuiteScripts/OI_CargaProduccion/</code>.</li>
+    <li>Script + despliegue del Suitelet creados, Liberado + Auditoría, audiencia por rol.</li>
+    <li>URL de Producción del Suitelet copiada.</li>
+    <li>Script + despliegue del User Event creados sobre Orden de trabajo.</li>
+    <li>Vínculo de centro creado con la URL de Producción.</li>
+    <li>Categoría del centro creada con el tipo de centro del rol Coordinador.</li>
+    <li>Prueba de humo superada (botón + menú + validación de inventario).</li>
+    <li>Primera orden real procesada y verificada (FC, materia seca, detalle de inventario).</li>
+    <li>Generador de JSON instalado en la hoja de Google Sheets.</li>
+    <li>Equipo capacitado en el flujo completo.</li>
+  </ul>
+</div>
+
+</main>
+<footer><b>Opportunity International Nicaragua</b> · Coordinación de Producción · Guía de Implementación en Producción — Módulo Carga de Producción · Julio 2026</footer>
+</body>
+</html>
