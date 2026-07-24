@@ -94,7 +94,7 @@
       <li><b>Crear el enlace de menú</b> (Vínculo de centro + Categoría del centro) con la URL de Producción, en el centro del rol Coordinador, ficha Transacciones, grupo "Producción".</li>
       <li><b>Publicar y ajustar log:</b> ambos deployments en <b>Publicado (Released)</b> y nivel <b>Auditoría</b>; audiencia = rol Coordinador de Producción.</li>
     </ol>
-    <div class="warn"><b>Aviso clave — IDs por ambiente.</b> Los internal IDs (ítems, bins, formularios, ensambles, BOM, cuentas) <b>pueden diferir entre Sandbox y Producción</b>. Antes del pase hay que verificar cada ID del objeto <code>CONFIG</code> contra Producción y ajustarlo si difiere. Es el único punto donde el código podría requerir edición. (En muchas cuentas coinciden por refresh de Sandbox, pero no debe asumirse.)</div>
+    <div class="ok"><b>✓ IDs de Producción YA VERIFICADOS (24/07/2026).</b> Se validó cada identificador del objeto <code>CONFIG</code> directamente contra la cuenta productiva mediante consultas de solo lectura: <b>todos coinciden con Sandbox</b>. No se requiere ninguna edición de código para el pase. Ver el detalle en la sección siguiente.</div>
   </div>
 
   <div class="phase"><h3><span class="ph">FASE 4</span>Primera corrida real y monitoreo</h3>
@@ -106,26 +106,52 @@
     </ol>
   </div>
 
+  <h2>Verificación de Producción — resultados (24/07/2026)</h2>
+  <p class="lead">Se ejecutaron consultas de <b>solo lectura</b> contra la cuenta productiva (rol Coordinador de Producción) para validar cada identificador del <code>CONFIG</code>. Resultado: <b>coincidencia total con Sandbox</b>.</p>
+  <table>
+    <tr><th>Elemento verificado</th><th>Valor en Producción</th><th>Estado</th></tr>
+    <tr><td>Ítems: MS-02 (94), MS-04 (511), MS-18 (566), MS-53 (1142)</td><td>Coinciden nombre y tipo</td><td>✓ OK</td></tr>
+    <tr><td>Materia prima: 05-MP-C (3840), 06-MP-O (3842)</td><td>Inventariables, correctos</td><td>✓ OK</td></tr>
+    <tr><td>Ensambles: 01-01-COV (3852), 01-21-COV (3853), 02-04-NOP (3855)</td><td>Coinciden</td><td>✓ OK</td></tr>
+    <tr><td>Subproductos: Fibra-41 (3857), Fibra-44 (3858), 01-Cascara (3859)</td><td>Coinciden</td><td>✓ OK</td></tr>
+    <tr><td>Ubicación 4 / Departamento 17</td><td>Planta / Planta Procesadora</td><td>✓ OK</td></tr>
+    <tr><td>Depósitos: 14 Clase B, 20 Clase C, 21 Producto Terminado (+16 Cascarilla)</td><td>Coinciden, todos en Planta</td><td>✓ OK</td></tr>
+    <tr><td>Estados de inventario: 1 Approved, 5 Inspection</td><td>Coinciden</td><td>✓ OK</td></tr>
+    <tr><td>Formularios: 109 Coordinador, 138 Gerencia, 111 Registro Proceso</td><td>Los tres existen y están en uso</td><td>✓ OK</td></tr>
+    <tr><td>BOM 13 (COV) / 14 (NOP) · Rutas 20 (FP COV) / 21 (FP NOP)</td><td>Coinciden</td><td>✓ OK</td></tr>
+    <tr><td>Lista SKU: 1→01, 2→04, 3→21</td><td>Coinciden</td><td>✓ OK</td></tr>
+    <tr><td>Registro Materia Seca Ponderada y sus 4 campos</td><td><code>customrecord_gtz_dry_matter_calculated</code> con <code>_wo</code>, <code>_lote</code>, <code>_qq_recibidos</code>, <code>_dry_matter_per</code></td><td>✓ OK</td></tr>
+    <tr><td>Campos del Mass Balance (entrada)</td><td>Todos presentes en la OT #1773 del 17/07</td><td>✓ OK</td></tr>
+  </table>
+
+  <h3>Hallazgos técnicos de la verificación</h3>
+  <ul>
+    <li><b>Los campos de salida del Mass Balance son de FÓRMULA</b> (agua peladora, outputs de cada etapa, FC por etapa, bolsas/hora y % materia seca ponderado): no se almacenan en la base y son de solo lectura. El módulo se ajustó para <b>no intentar escribirlos</b>; NetSuite los recalcula solo. Validado en la OT 1713 de Sandbox, donde el FC Empaque quedó en <b>3.73</b> (el objetivo) fijando únicamente el agua ZH.</li>
+    <li><b>El % de materia seca se almacena como fracción</b> (0.3445 = 34.45%), y al escribir el número porcentual (37) NetSuite guarda 0.37. Se comparó lo generado por el módulo en Sandbox contra registros creados manualmente: <b>formato idéntico</b>.</li>
+    <li><b>La agregación por lote del módulo coincide con Producción:</b> el lote <code>LN196-TL-COV-170726-39</code> aparece en Producción con 361.78 qq, que es la suma de las dos filas por coordinador (315.43 + 46.35) — misma lógica que aplica el generador de JSON y el módulo.</li>
+    <li><b>El campo "% Pérdida de producto en ambiente" no es porcentaje</b> sino numérico (−5), tal como está documentado en el procedimiento. El módulo lo trata correctamente.</li>
+  </ul>
+
   <h2>Checklist de verificación antes del pase</h2>
   <ul class="chk">
-    <li>IDs del <code>CONFIG</code> verificados contra Producción (ítems, bins, formularios, ensambles, BOM/rev, rutas, estados).</li>
-    <li>Existencia en Producción del registro Materia Seca Ponderada y de los campos del Mass Balance.</li>
-    <li>Rol Coordinador de Producción basado en el mismo tipo de centro (para el enlace de menú).</li>
+    <li><s>IDs del <code>CONFIG</code> verificados contra Producción</s> — <b>COMPLETADO 24/07/2026, sin diferencias</b>.</li>
+    <li><s>Existencia en Producción del registro Materia Seca Ponderada y de los campos del Mass Balance</s> — <b>COMPLETADO</b>.</li>
+    <li>Rol Coordinador de Producción basado en el mismo tipo de centro en Producción (para el enlace de menú).</li>
     <li>Cuenta contable de subproductos confirmada por Contabilidad.</li>
     <li>Piloto en Sandbox validado por el equipo, sin observaciones pendientes.</li>
-    <li>Archivos de plantilla (CSV/JSON) entregados al equipo.</li>
+    <li>Archivos de plantilla (CSV/JSON) y el generador de Google Sheets entregados al equipo.</li>
   </ul>
 
   <h2>Riesgos y mitigaciones</h2>
   <table>
     <tr><th>Riesgo</th><th>Mitigación</th></tr>
-    <tr><td>IDs distintos en Producción</td><td>Verificación del CONFIG en Fase 3 antes de activar; el diagnóstico de la interfaz muestra errores claros si algo no calza.</td></tr>
+    <tr><td><s>IDs distintos en Producción</s> — <b>RIESGO ELIMINADO</b></td><td>Verificado el 24/07/2026 contra la cuenta productiva: todos los IDs coinciden con Sandbox. No requiere edición de código.</td></tr>
     <tr><td>Lote de MP en estado Inspection</td><td>La validación previa bloquea el proceso automáticamente; no se crea transacción con inventario no aprobado.</td></tr>
     <tr><td>Diferencia estimado vs ERP</td><td>El sistema toma la cantidad del ERP y muestra la diferencia; el usuario decide con información completa.</td></tr>
     <tr><td>Cuenta de subproductos incorrecta</td><td>Punto abierto en el script GTZ existente; ajuste de una línea, independiente del módulo.</td></tr>
   </table>
 
-  <div class="ok"><b>Resumen:</b> el pase a Producción es de bajo riesgo porque se limita a replicar un despliegue ya probado. El único trabajo técnico real es la verificación de IDs por ambiente; el resto es configuración de NetSuite idéntica a la de Sandbox.</div>
+  <div class="ok"><b>Resumen:</b> el pase a Producción es de bajo riesgo. Se limita a replicar un despliegue ya probado, y con la verificación de IDs de Producción ya completada (sin diferencias), <b>no queda trabajo de código pendiente</b>: solo configuración de NetSuite idéntica a la de Sandbox.</div>
 
 </main>
 <footer><b>Opportunity International Nicaragua</b> · Coordinación de Producción · Próximos Pasos para Producción · Julio 2026</footer>

@@ -64,8 +64,9 @@
   <p><b>¿Por qué no Map/Reduce?</b> Es una orden por día con ~10 lotes; cabe de sobra en la gobernanza de un Suitelet. La misma librería podría invocarse desde un Map/Reduce en el futuro sin cambios.</p>
   <div class="note"><b>Acceso desde la lista.</b> NetSuite no permite botones nativos en las páginas de lista estándar. El acceso se resolvió con: (a) botón en el registro de cada Orden de Trabajo (User Event) y (b) un Enlace de Centro en el menú Transacciones (grupo "Producción"), ambos apuntando al mismo Suitelet.</p></div>
 
-  <h2>2. Identificadores de configuración (verificados en la cuenta)</h2>
-  <p>Todos los IDs viven en el objeto <code>CONFIG</code> de la librería y fueron confirmados con consultas y registros reales de la cuenta.</p>
+  <h2>2. Identificadores de configuración (verificados en Sandbox y Producción)</h2>
+  <div class="ok"><b>✓ Verificado en ambos ambientes (24/07/2026).</b> Cada ID fue confirmado con consultas de solo lectura contra la cuenta productiva: <b>Sandbox y Producción coinciden en su totalidad</b>, por lo que el pase no requiere editar el código.</div>
+  <p>Todos los IDs viven en el objeto <code>CONFIG</code> de la librería.</p>
   <table>
     <tr><th>Concepto</th><th>Valor / ID interno</th></tr>
     <tr><td>Subsidiaria OIN - Nicaragua</td><td>1</td></tr>
@@ -106,6 +107,7 @@ OutputSecado  = ROUND(OutputZH * (1 - %secado) + %perdProd, 2)
 OutputEmpaque = ROUND(OutputSecado * (1 - %perdPack - %fibra), 2)
 FC_etapa      = ROUND(Input / Output_etapa, 2)
 BolsasHora    = ROUND(OutputEmpaque / (22.68 * 24))</pre>
+  <div class="note"><b>Los campos de salida son de FÓRMULA (solo lectura).</b> Verificado en Producción: agua peladora, outputs de cada etapa, FC por etapa, bolsas/hora y % materia seca ponderado <b>no se almacenan</b> en la base — NetSuite los calcula al guardar. El módulo escribe únicamente las variables de entrada (agua ZH, prensado, secado, pérdida en empaque) y deja que las fórmulas nativas produzcan el resultado. Confirmado en la OT 1713 de Sandbox: FC Empaque quedó en <b>3.73</b> (el objetivo) fijando solo el agua ZH.</div>
   <p>El módulo <b>reemplaza el ajuste manual por ensayo y error</b>: despeja en forma cerrada el "Agua ralladora ZH" para que <code>FC Empaque = FC (Bruto)</code> con las demás variables en su valor nominal. Si el agua queda fuera de límites, resuelve <b>en cascada</b> con las variables editables:</p>
   <ul>
     <li>Agua ZH (variable gruesa) → Prensado (45% ±18%, banda 27–63) → Secado (45% ±18%, banda 27–63) → Pérdida en empaque (5% ±0.10%, banda 4.9–5.1).</li>
