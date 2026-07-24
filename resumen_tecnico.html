@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen Técnico — Módulo Carga de Producción | Opportunity International Nicaragua</title>
+<style>
+  :root{--oi-teal:#00A7A5;--oi-teal-dark:#00807E;--oi-magenta:#E5087E;--oi-orange:#F58220;--oi-purple:#3A2A50;--ink:#2B2740;--ink-soft:#5C5873;--line:#E4E2EC;--bg:#FBFBFD;--teal-tint:#E6F6F6;--magenta-tint:#FDE9F3;--orange-tint:#FEF1E3;--code-bg:#2B2740;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Open Sans","Segoe UI",-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px}
+  .brandbar{height:6px;background:linear-gradient(90deg,var(--oi-orange) 0%,var(--oi-orange) 25%,var(--oi-magenta) 25%,var(--oi-magenta) 60%,var(--oi-teal) 60%,var(--oi-teal) 100%)}
+  .nav{background:#fff;border-bottom:1px solid var(--line);padding:11px 7%;font-size:13px;display:flex;gap:20px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .nav a{color:var(--ink-soft);text-decoration:none;font-weight:600} .nav a:hover{color:var(--oi-magenta)} .nav a.here{color:var(--oi-purple);border-bottom:2px solid var(--oi-magenta);padding-bottom:2px}
+  header{background:var(--oi-purple);color:#fff;padding:48px 7%}
+  header .doc-tag{display:inline-block;background:var(--oi-teal);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  header h1{font-size:29px;font-weight:700;line-height:1.25;max-width:880px}
+  header p.sub{margin-top:14px;color:#CFC8DE;font-size:15.5px;max-width:820px}
+  main{padding:46px 7% 72px;max-width:1120px;margin:0 auto}
+  h2{color:var(--oi-purple);font-size:20px;margin:44px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)} h2:first-of-type{margin-top:0}
+  h3{color:var(--oi-teal-dark);font-size:16px;margin:24px 0 8px}
+  p{margin:11px 0} .lead{font-size:16.5px;color:var(--ink-soft)}
+  ul{margin:10px 0 10px 22px} li{margin:5px 0}
+  code{background:#EEECF4;color:#6E2A66;padding:1px 6px;border-radius:4px;font-family:"Consolas","Monaco",monospace;font-size:13px}
+  pre{background:var(--code-bg);color:#E8E6F0;padding:16px 18px;border-radius:10px;overflow-x:auto;margin:14px 0;font-family:"Consolas","Monaco",monospace;font-size:12.5px;line-height:1.6}
+  pre .c{color:#8E88A8} pre .k{color:#7FDAD8} pre .s{color:#F6A96B}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(58,42,80,.06)}
+  th{background:var(--oi-purple);color:#fff;text-align:left;padding:10px 13px;font-weight:600;font-size:12.5px}
+  td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top} tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#FAFAFC}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:18px 0}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(58,42,80,.05);border-top:4px solid var(--oi-teal)}
+  .card:nth-child(2){border-top-color:var(--oi-magenta)} .card:nth-child(3){border-top-color:var(--oi-orange)} .card:nth-child(4){border-top-color:var(--oi-purple)}
+  .card h4{color:var(--oi-purple);font-size:14.5px;margin-bottom:4px} .card .file{font-family:"Consolas",monospace;font-size:12px;color:var(--oi-teal-dark);margin-bottom:8px} .card p{font-size:13px;color:var(--ink-soft);margin:0}
+  .note{background:var(--orange-tint);border-left:4px solid var(--oi-orange);padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14px}
+  .ok{background:var(--teal-tint);border-left:4px solid var(--oi-teal);padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14px}
+  footer{background:var(--oi-purple);color:#B9B0CC;text-align:center;padding:26px;font-size:12.5px;margin-top:44px} footer b{color:#fff}
+  @media print{.nav{display:none} pre{white-space:pre-wrap}}
+</style>
+</head>
+<body>
+<div class="brandbar"></div>
+<nav class="nav">
+  <a href="index.html">Inicio</a>
+  <a href="reporte_ejecutivo.html">Reporte Ejecutivo</a>
+  <a href="resumen_tecnico.html" class="here">Resumen Técnico</a>
+  <a href="paso_a_paso.html">Paso a Paso</a>
+  <a href="proximos_pasos_produccion.html">Próximos Pasos (Producción)</a>
+</nav>
+<header>
+  <span class="doc-tag">Documento 2 · Resumen Técnico de Implementación</span>
+  <h1>Arquitectura, configuración y lógica del módulo Carga de Producción</h1>
+  <p class="sub">SuiteScript 2.1 sobre Oracle NetSuite. Descripción de los componentes, los identificadores internos verificados contra la cuenta, las fórmulas del Mass Balance y el flujo transaccional implementado en Sandbox.</p>
+</header>
+<main>
+
+  <h2>1. Arquitectura</h2>
+  <p class="lead">El módulo se compone de cuatro archivos SuiteScript 2.1 alojados en una misma carpeta del File Cabinet (<code>SuiteScripts/OI_CargaProduccion/</code>), que se referencian entre sí por ruta relativa.</p>
+  <div class="cards">
+    <div class="card"><h4>Librería compartida</h4><div class="file">oi_lib_produccion.js</div><p>Objeto CONFIG con IDs reales, validaciones vía N/query, creación de la Orden de Trabajo, registros de Materia Seca Ponderada, motor de cálculo del FC y Compleción. Es el cerebro del módulo.</p></div>
+    <div class="card"><h4>Suitelet (interfaz + API)</h4><div class="file">oi_sl_carga_produccion.js</div><p>GET: interfaz HTML de carga, previsualización, validación y proceso. POST: API JSON con acciones <code>validate</code> y <code>process</code>. Revalida en servidor antes de crear datos.</p></div>
+    <div class="card"><h4>User Event</h4><div class="file">oi_ue_wo_boton_carga.js</div><p>En <code>beforeLoad</code> de la Orden de Trabajo agrega el botón "Carga de Producción" (en vista y edición) y adjunta el Client Script por ruta.</p></div>
+    <div class="card"><h4>Client Script</h4><div class="file">oi_cs_wo_boton_carga.js</div><p>Abre el Suitelet en pestaña nueva al pulsar el botón. No requiere registro de script propio; se carga desde el User Event.</p></div>
+  </div>
+  <p><b>¿Por qué no Map/Reduce?</b> Es una orden por día con ~10 lotes; cabe de sobra en la gobernanza de un Suitelet. La misma librería podría invocarse desde un Map/Reduce en el futuro sin cambios.</p>
+  <div class="note"><b>Acceso desde la lista.</b> NetSuite no permite botones nativos en las páginas de lista estándar. El acceso se resolvió con: (a) botón en el registro de cada Orden de Trabajo (User Event) y (b) un Enlace de Centro en el menú Transacciones (grupo "Producción"), ambos apuntando al mismo Suitelet.</p></div>
+
+  <h2>2. Identificadores de configuración (verificados en la cuenta)</h2>
+  <p>Todos los IDs viven en el objeto <code>CONFIG</code> de la librería y fueron confirmados con consultas y registros reales de la cuenta.</p>
+  <table>
+    <tr><th>Concepto</th><th>Valor / ID interno</th></tr>
+    <tr><td>Subsidiaria OIN - Nicaragua</td><td>1</td></tr>
+    <tr><td>Ubicación Granada : Planta</td><td>4</td></tr>
+    <tr><td>Departamento Programa Agrícola : Planta Procesadora</td><td>17</td></tr>
+    <tr><td>Clase Productos Agrícolas</td><td>25</td></tr>
+    <tr><td>Formularios: OT-Coordinador / OT-Gerencia / Registro Proceso (Compleción)</td><td>109 / 138 / 111</td></tr>
+    <tr><td>Depósitos (bins): Clase B / Clase C / Producto Terminado</td><td>14 / 20 / 21</td></tr>
+    <tr><td>Estados de inventario: Approved / Inspection</td><td>1 / 5</td></tr>
+    <tr><td>Insumos: MS-53 / MS-18 / MS-02 / MS-04</td><td>1142 / 566 / 94 / 511</td></tr>
+    <tr><td>Materia prima: 05-MP-C / 06-MP-O (inventariables)</td><td>3840 / 3842</td></tr>
+    <tr><td>Subproductos: 01-Cascara / Fibra-41 / Fibra-44</td><td>3859 / 3857 / 3858</td></tr>
+    <tr><td>SKU 01 → ensamble / BOM (rev) / ruta</td><td>3852 / 13 (42) / 20</td></tr>
+    <tr><td>SKU 04 → ensamble / BOM (rev) / ruta</td><td>3855 / 14 (43) / 21</td></tr>
+    <tr><td>SKU 21 → ensamble / BOM (rev) / ruta</td><td>3853 / 13 (42) / 20</td></tr>
+    <tr><td>Registro Materia Seca Ponderada</td><td><code>customrecord_gtz_dry_matter_calculated</code></td></tr>
+    <tr><td>Campo LOTE de PT en la OT</td><td><code>custbody5</code></td></tr>
+  </table>
+  <p>Los campos del Mass Balance (<code>custbody_gtz_wo_*</code>) están mapeados y comentados en la librería.</p>
+
+  <h2>3. Reglas de negocio implementadas</h2>
+  <ul>
+    <li><b>SKU derivado del lote de PT:</b> el sufijo del lote (ej. <code>071626-01</code> → SKU <code>01</code>) determina ensamble, BOM y ruta.</li>
+    <li><b>Sustitución MS-53 → MS-04 para SKU 21:</b> se realiza al crear la OT, en modo dinámico, dejando que el BOM recalcule la cantidad.</li>
+    <li><b>MS-02 en todas las órdenes:</b> se agrega como componente en la creación de la OT.</li>
+    <li><b>Prevalencia del ERP:</b> la cantidad a consumir de cada lote es el mínimo entre lo estimado (Google Sheet) y el disponible del ERP, truncado a 2 decimales. Las diferencias se muestran en pantalla.</li>
+    <li><b>Bloqueo por estado:</b> un lote en estado distinto a "Approved" (ej. Inspection) bloquea el proceso.</li>
+    <li><b>Ruta de MP por SKU:</b> SKU 01 y 21 consumen <code>05-MP-C</code>; SKU 04 consume <code>06-MP-O</code>.</li>
+  </ul>
+
+  <h2>4. Fórmulas del Mass Balance y motor de FC</h2>
+  <p>Con la fórmula del <code>OutputZH</code> proporcionada por la Coordinación, se derivaron y verificaron <b>al centavo</b> contra tres Órdenes de Trabajo reales todas las fórmulas de los campos calculados (porcentajes como fracción):</p>
+<pre><span class="c">// Verificado contra OTs reales (COV 30/04, NOP 26/04 y ejemplo 17/07)</span>
+AguaPeladora  = ROUND(Input * (%almidon - %lodo), 2)
+OutputZH      = ROUND((AguaPeladora*2 + AguaZH)
+                - (%cascarilla + %perdAgua + %prensado) * AguaPeladora, 2)
+OutputSecado  = ROUND(OutputZH * (1 - %secado) + %perdProd, 2)
+OutputEmpaque = ROUND(OutputSecado * (1 - %perdPack - %fibra), 2)
+FC_etapa      = ROUND(Input / Output_etapa, 2)
+BolsasHora    = ROUND(OutputEmpaque / (22.68 * 24))</pre>
+  <p>El módulo <b>reemplaza el ajuste manual por ensayo y error</b>: despeja en forma cerrada el "Agua ralladora ZH" para que <code>FC Empaque = FC (Bruto)</code> con las demás variables en su valor nominal. Si el agua queda fuera de límites, resuelve <b>en cascada</b> con las variables editables:</p>
+  <ul>
+    <li>Agua ZH (variable gruesa) → Prensado (45% ±18%, banda 27–63) → Secado (45% ±18%, banda 27–63) → Pérdida en empaque (5% ±0.10%, banda 4.9–5.1).</li>
+    <li>Cada variable entra solo si la anterior tocó su límite. Las variables del Google Sheet (%lodo, %cascarilla, %fibra, input) y las constantes (75% almidón, 99% agua, −5) no se tocan.</li>
+    <li>Todo en un solo guardado; también se fijan los campos calculados (outputs/FC/bolsas por hora) para no depender de dónde evalúa NetSuite las fórmulas nativas.</li>
+  </ul>
+  <div class="ok"><b>Resultado medido:</b> ejemplo del 17-jul → agua ZH despejada 16,578.8, FC 3.73 exacto sin tocar el prensado. Ejemplo del 16-jul → agua 10,929.6, FC 3.75 exacto.</div>
+
+  <h2>5. Flujo transaccional (fiel al procedimiento manual)</h2>
+  <table>
+    <tr><th>#</th><th>Paso</th><th>Detalle técnico</th></tr>
+    <tr><td>0</td><td>Validación</td><td>Consulta N/query del inventario por lote (bins Clase B/C, estado Approved), disponibilidad de insumos MS y consistencia del archivo (suma PT = Output). No modifica datos.</td></tr>
+    <tr><td>1</td><td>Crear OT (Planificada)</td><td>Formulario Coordinador (109), WIP, BOM y ruta según SKU, Mass Balance, subproductos, LOTE, + línea MS-02; SKU 21 sustituye MS-53 por MS-04.</td></tr>
+    <tr><td>2</td><td>Ajuste de FC</td><td>Cálculo cerrado del Mass Balance sobre la OT guardada; fija agua ZH y campos calculados en un guardado.</td></tr>
+    <tr><td>3</td><td>Materia Seca Ponderada</td><td>Crea los registros hijos <code>customrecord_gtz_dry_matter_calculated</code> con lote, QQ recibidos y % materia seca.</td></tr>
+    <tr><td>4</td><td>Liberar OT</td><td>Cambia el formulario a Gerencia (138) y el estado a Liberada, en un guardado separado.</td></tr>
+    <tr><td>5</td><td>Compleción</td><td><code>record.transform</code> de la OT. Tiempos 1440 min (ejecución máquina y mano de obra, 8 campos); consumo de MP con detalle por lote/clase (Approved); insumos MS solo con cantidad (descarga por backflush); PT en bin Producto Terminado, estado Inspection, caducidad +2 años.</td></tr>
+  </table>
+  <div class="note"><b>Compleción con múltiples lotes de PT.</b> NetSuite no admite dar de alta varios lotes de producto terminado en una sola transacción. El módulo aplica <b>siempre</b> el flujo de dos pasos: guarda con un lote por el total y luego edita el detalle para separar los lotes reales. Validado con dos lotes (7,000 + 4,600 kg).</p></div>
+
+  <h2>6. Controles de robustez (validados en Sandbox)</h2>
+  <ul>
+    <li><b>Validación server-side:</b> el proceso revalida en el servidor antes de crear transacciones; no confía en el cliente.</li>
+    <li><b>Comunicación por formulario:</b> la interfaz envía el payload como parámetro de formulario (leído en <code>request.parameters</code>), evitando problemas con el cuerpo crudo del POST en Suitelets.</li>
+    <li><b>Botones no-submit:</b> los botones usan <code>type="button"</code> y <code>preventDefault</code> para no enviar el formulario nativo de NetSuite.</li>
+    <li><b>Consultas correctas:</b> <code>N/query.runSuiteQL</code> se invoca con el parámetro <code>query</code> (no <code>sqlQuery</code>).</li>
+    <li><b>Diagnóstico visible:</b> cualquier error del backend se muestra en la interfaz con su mensaje y origen.</li>
+  </ul>
+
+  <h2>7. Punto abierto (fuera del módulo)</h2>
+  <div class="note">El UserEvent existente <code>WorkOrder.UserEventScript.js</code> genera los ajustes de inventario de fibra y cáscara en la cuenta <b>130 (1800-00-000 Inventory In Transit)</b>. Se verificó que los ajustes históricos reales ya postean a esa cuenta, es decir, es el comportamiento vigente y no lo introduce este módulo. Si Contabilidad determina otra cuenta para subproductos, es un ajuste de una línea en ese script, independiente del módulo de Carga de Producción.</div>
+
+</main>
+<footer><b>Opportunity International Nicaragua</b> · Coordinación de Producción · Resumen Técnico — Módulo Carga de Producción · Julio 2026</footer>
+</body>
+</html>

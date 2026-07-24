@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Ejecutivo — Módulo Carga de Producción | Opportunity International Nicaragua</title>
+<style>
+  :root{--oi-teal:#00A7A5;--oi-teal-dark:#00807E;--oi-magenta:#E5087E;--oi-orange:#F58220;--oi-purple:#3A2A50;--ink:#2B2740;--ink-soft:#5C5873;--line:#E4E2EC;--bg:#FBFBFD;--teal-tint:#E6F6F6;--magenta-tint:#FDE9F3;--orange-tint:#FEF1E3;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Open Sans","Segoe UI",-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15.5px}
+  .brandbar{height:6px;background:linear-gradient(90deg,var(--oi-orange) 0%,var(--oi-orange) 25%,var(--oi-magenta) 25%,var(--oi-magenta) 60%,var(--oi-teal) 60%,var(--oi-teal) 100%)}
+  .nav{background:#fff;border-bottom:1px solid var(--line);padding:11px 9%;font-size:13px;display:flex;gap:20px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .nav a{color:var(--ink-soft);text-decoration:none;font-weight:600} .nav a:hover{color:var(--oi-magenta)} .nav a.here{color:var(--oi-purple);border-bottom:2px solid var(--oi-magenta);padding-bottom:2px}
+  header{background:var(--oi-purple);color:#fff;padding:50px 9%}
+  header .doc-tag{display:inline-block;background:var(--oi-orange);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  header h1{font-size:31px;font-weight:700;line-height:1.25;max-width:860px}
+  header p.sub{margin-top:14px;color:#CFC8DE;font-size:16px;max-width:780px}
+  header .meta{margin-top:28px;display:flex;flex-wrap:wrap;gap:36px;font-size:13px;color:#B9B0CC}
+  header .meta b{display:block;color:#fff;font-size:14px;font-weight:600}
+  main{padding:52px 9% 72px;max-width:1080px;margin:0 auto}
+  h2{color:var(--oi-purple);font-size:20px;margin:46px 0 12px} h2:first-of-type{margin-top:0}
+  p{margin:11px 0} .lead{font-size:17px;color:var(--ink-soft)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:26px 0}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;text-align:center;box-shadow:0 1px 3px rgba(58,42,80,.06)}
+  .kpi .v{font-size:28px;font-weight:800;color:var(--oi-magenta)}
+  .kpi:nth-child(2) .v{color:var(--oi-teal-dark)} .kpi:nth-child(3) .v{color:var(--oi-orange)} .kpi:nth-child(4) .v{color:var(--oi-purple)}
+  .kpi .l{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.45}
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;margin:20px 0}
+  .flow .box{background:#fff;border:2px solid var(--oi-teal);border-radius:12px;padding:16px 18px;flex:1;min-width:150px;text-align:center;font-size:13.5px}
+  .flow .box b{display:block;color:var(--oi-purple);margin-bottom:5px}
+  .flow .arr{display:flex;align-items:center;padding:0 10px;color:var(--oi-magenta);font-size:22px;font-weight:800}
+  .benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:20px 0}
+  .b-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:0 1px 3px rgba(58,42,80,.05);border-top:5px solid var(--oi-teal)}
+  .b-card:nth-child(2){border-top-color:var(--oi-magenta)} .b-card:nth-child(3){border-top-color:var(--oi-orange)} .b-card:nth-child(4){border-top-color:var(--oi-purple)}
+  .b-card b{color:var(--oi-purple);display:block;font-size:15.5px;margin-bottom:7px} .b-card p{font-size:14px;color:var(--ink-soft);margin:0}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(58,42,80,.06)}
+  th{background:var(--oi-purple);color:#fff;text-align:left;padding:11px 14px;font-weight:600;font-size:13px}
+  td{padding:10px 14px;border-bottom:1px solid var(--line)} tr:last-child td{border-bottom:none}
+  .quote{border-left:4px solid var(--oi-magenta);background:var(--magenta-tint);padding:18px 22px;border-radius:0 12px 12px 0;margin:22px 0;font-size:15.5px;font-style:italic;color:var(--oi-purple)}
+  .quote span{display:block;font-style:normal;font-size:13px;color:var(--ink-soft);margin-top:8px}
+  .next li{list-style:none;position:relative;padding:12px 16px 12px 52px;background:#fff;border:1px solid var(--line);border-radius:10px;margin:10px 0;counter-increment:nx}
+  ol.next{counter-reset:nx;margin:14px 0;padding:0}
+  .next li::before{content:counter(nx);position:absolute;left:14px;top:12px;background:var(--oi-orange);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .status{display:inline-block;background:var(--teal-tint);color:var(--oi-teal-dark);font-weight:700;font-size:13px;padding:6px 16px;border-radius:20px}
+  footer{background:var(--oi-purple);color:#B9B0CC;text-align:center;padding:26px;font-size:12.5px;margin-top:44px} footer b{color:#fff}
+  @media print{.nav{display:none} header{padding:30px 7%} main{padding:26px 7%} .kpi,.b-card,table{box-shadow:none} h2{page-break-after:avoid}}
+</style>
+</head>
+<body>
+<div class="brandbar"></div>
+<nav class="nav">
+  <a href="index.html">Inicio</a>
+  <a href="reporte_ejecutivo.html" class="here">Reporte Ejecutivo</a>
+  <a href="resumen_tecnico.html">Resumen Técnico</a>
+  <a href="paso_a_paso.html">Paso a Paso</a>
+  <a href="proximos_pasos_produccion.html">Próximos Pasos (Producción)</a>
+</nav>
+<header>
+  <span class="doc-tag">Documento 1 · Reporte Ejecutivo — Dirección / Gerencia</span>
+  <h1>Automatización del registro de Órdenes de Trabajo de producción</h1>
+  <p class="sub">De la captura manual, campo por campo y subficha por subficha, a un flujo de un solo paso a partir del archivo diario de producción — con validación de inventario y cálculo automático del Factor de Conversión.</p>
+  <div class="meta">
+    <div><b>Opportunity International Nicaragua</b>Organización</div>
+    <div><b>Coordinación de Producción</b>Área responsable</div>
+    <div><b>Julio 2026</b>Fecha</div>
+    <div><b><span style="color:#7FDAD8">Validado en Sandbox</span></b>Estado</div>
+  </div>
+</header>
+<main>
+
+  <h2>El problema</h2>
+  <p class="lead">Cada día de producción, la planta registra una Orden de Trabajo en NetSuite a partir de los datos capturados en una hoja de Google. Hacerlo a mano implica llenar decenas de campos en varias subfichas, calcular por prueba y error el Factor de Conversión (FC), asignar lote por lote la materia prima consumida y separar manualmente los lotes de producto terminado. Es un proceso <b>lento, repetitivo y propenso a error</b>, y el paso del Mass Balance (ajustar el FC) es el que más tiempo consume.</p>
+
+  <h2>La solución</h2>
+  <p>Se construyó un módulo dentro de NetSuite que reproduce, de forma automática, exactamente el mismo procedimiento que hoy se hace a mano. El usuario carga el archivo del día (CSV o JSON), el sistema lo interpreta, <b>valida el inventario disponible</b>, y con un clic crea la Orden de Trabajo liberada y su Compleción, calculando el FC con precisión.</p>
+  <div class="flow">
+    <div class="box"><b>1 · Cargar</b>Se sube el archivo diario y el sistema muestra una previsualización ordenada</div>
+    <div class="arr">→</div>
+    <div class="box"><b>2 · Validar</b>El sistema consulta el inventario real y semaforiza cada lote (verde/ámbar/rojo)</div>
+    <div class="arr">→</div>
+    <div class="box"><b>3 · Procesar</b>Crea la Orden de Trabajo, ajusta el FC, la libera y genera la Compleción</div>
+  </div>
+  <div class="quote">"El llenado del Mass Balance es lo que más lleva tiempo, porque es bastante manualidad para que cuadre lo del Google Sheet con lo que debe quedar en NetSuite."<span>Situación descrita por la Coordinación de Producción. El nuevo módulo elimina ese trabajo: calcula las variables del Mass Balance automáticamente para alcanzar el FC objetivo.</span></div>
+
+  <h2>Resultados de la validación en Sandbox</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="v">2 / 2</div><div class="l">Corridas completas exitosas (lote único y lotes múltiples)</div></div>
+    <div class="kpi"><div class="v">3.73</div><div class="l">FC objetivo alcanzado con exactitud, sin prueba y error</div></div>
+    <div class="kpi"><div class="v">100%</div><div class="l">Coincidencia de cantidades entre archivo, validación y transacción</div></div>
+    <div class="kpi"><div class="v">C$0</div><div class="l">Inversión en licencias o consultoría externa</div></div>
+  </div>
+  <p>Se ejecutaron dos corridas reales en Sandbox que crearon Órdenes de Trabajo liberadas y sus Compleciones, con consumo real de lotes de materia prima aprobados y entrada de producto terminado. En la corrida de lotes múltiples, el sistema separó correctamente dos lotes de producto terminado (7,000 kg y 4,600 kg) en el detalle de inventario.</p>
+
+  <h2>Beneficios y controles</h2>
+  <div class="benefits">
+    <div class="b-card"><b>Ahorro de tiempo</b><p>El registro que antes tomaba minutos de captura manual multi-subficha se reduce a cargar un archivo y hacer clic. El cálculo del FC, antes por ensayo y error, ahora es instantáneo y exacto.</p></div>
+    <div class="b-card"><b>Validación de inventario previa</b><p>Antes de crear cualquier transacción, el sistema verifica que los lotes de materia prima existan, estén aprobados y tengan stock. Si algo está en estado "Inspection" o sin existencia, bloquea el proceso.</p></div>
+    <div class="b-card"><b>Fidelidad al procedimiento actual</b><p>El módulo sigue paso a paso el mismo flujo documentado por la Coordinación: crear planificada, ajustar FC, registrar materia seca, liberar y completar. No cambia la lógica del negocio.</p></div>
+    <div class="b-card"><b>Trazabilidad y consistencia</b><p>Las cantidades del ERP prevalecen sobre las estimadas, con las diferencias mostradas en pantalla. Cada corrida deja registro en la bitácora del sistema para auditoría.</p></div>
+  </div>
+
+  <h2>Estado actual y próximos pasos</h2>
+  <p><span class="status">✓ Desarrollo, instalación y pruebas completados en Sandbox</span></p>
+  <ol class="next">
+    <li><b>Piloto con el equipo:</b> el módulo ya está publicado en Sandbox para el rol Coordinador de Producción; se recomienda una prueba de unos días con datos reales antes del pase.</li>
+    <li><b>Definición contable (punto abierto):</b> confirmar la cuenta contable de los ajustes de subproductos (fibra/cáscara). Hoy usan la cuenta que ya venía en operación; es un ajuste menor e independiente del módulo.</li>
+    <li><b>Puesta en producción:</b> replicar el despliegue en la cuenta productiva, publicar a los roles autorizados y acompañar con el instructivo de uso.</li>
+  </ol>
+
+  <h2>Documentación de soporte</h2>
+  <table>
+    <tr><th>Documento</th><th>Audiencia</th><th>Contenido</th></tr>
+    <tr><td>Resumen Técnico de Implementación</td><td>TI / Administrador NetSuite</td><td>Arquitectura de los scripts, IDs de configuración y fórmulas del Mass Balance</td></tr>
+    <tr><td>Paso a Paso Detallado (Sandbox)</td><td>TI / Implementador</td><td>Instalación granular ejecutada, ejemplos reales e incidencias resueltas</td></tr>
+    <tr><td>Próximos Pasos para Producción</td><td>TI / Gerencia</td><td>Plan de pase a Producción y verificaciones</td></tr>
+  </table>
+
+</main>
+<footer><b>Opportunity International Nicaragua</b> · Coordinación de Producción · Reporte Ejecutivo — Módulo Carga de Producción · Julio 2026</footer>
+</body>
+</html>

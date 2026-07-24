@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paso a Paso Detallado (Sandbox) — Módulo Carga de Producción | Opportunity International Nicaragua</title>
+<style>
+  :root{--oi-teal:#00A7A5;--oi-teal-dark:#00807E;--oi-magenta:#E5087E;--oi-orange:#F58220;--oi-purple:#3A2A50;--ink:#2B2740;--ink-soft:#5C5873;--line:#E4E2EC;--bg:#FBFBFD;--teal-tint:#E6F6F6;--magenta-tint:#FDE9F3;--orange-tint:#FEF1E3;--code-bg:#2B2740;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Open Sans","Segoe UI",-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px}
+  .brandbar{height:6px;background:linear-gradient(90deg,var(--oi-orange) 0%,var(--oi-orange) 25%,var(--oi-magenta) 25%,var(--oi-magenta) 60%,var(--oi-teal) 60%,var(--oi-teal) 100%)}
+  .nav{background:#fff;border-bottom:1px solid var(--line);padding:11px 7%;font-size:13px;display:flex;gap:20px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  .nav a{color:var(--ink-soft);text-decoration:none;font-weight:600} .nav a:hover{color:var(--oi-magenta)} .nav a.here{color:var(--oi-purple);border-bottom:2px solid var(--oi-magenta);padding-bottom:2px}
+  header{background:var(--oi-purple);color:#fff;padding:48px 7%}
+  header .doc-tag{display:inline-block;background:var(--oi-orange);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px}
+  header h1{font-size:29px;font-weight:700;line-height:1.25;max-width:880px}
+  header p.sub{margin-top:14px;color:#CFC8DE;font-size:15.5px;max-width:820px}
+  main{padding:46px 7% 72px;max-width:1120px;margin:0 auto}
+  h2{color:var(--oi-purple);font-size:20px;margin:42px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--line)} h2:first-of-type{margin-top:0}
+  h3{color:var(--oi-teal-dark);font-size:16px;margin:22px 0 6px}
+  p{margin:10px 0} .lead{font-size:16px;color:var(--ink-soft)}
+  ul,ol{margin:10px 0 10px 22px} li{margin:5px 0}
+  code{background:#EEECF4;color:#6E2A66;padding:1px 6px;border-radius:4px;font-family:"Consolas","Monaco",monospace;font-size:13px}
+  pre{background:var(--code-bg);color:#E8E6F0;padding:15px 18px;border-radius:10px;overflow-x:auto;margin:12px 0;font-family:"Consolas","Monaco",monospace;font-size:12.5px;line-height:1.6}
+  .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 24px 18px;margin:16px 0;box-shadow:0 1px 3px rgba(58,42,80,.05);border-left:5px solid var(--oi-teal)}
+  .step h3{display:flex;align-items:center;gap:10px;margin-top:14px}
+  .step h3 .num{background:var(--oi-teal);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex:none}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(58,42,80,.06)}
+  th{background:var(--oi-purple);color:#fff;text-align:left;padding:10px 13px;font-weight:600;font-size:12.5px}
+  td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top} tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#FAFAFC}
+  .bug{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0;border-left:5px solid var(--oi-magenta);box-shadow:0 1px 3px rgba(58,42,80,.05)}
+  .bug h4{color:var(--oi-magenta);font-size:15px;margin-bottom:6px}
+  .bug .lbl{font-weight:700;color:var(--oi-purple)}
+  .note{background:var(--orange-tint);border-left:4px solid var(--oi-orange);padding:13px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:14px}
+  .ok{background:var(--teal-tint);border-left:4px solid var(--oi-teal);padding:13px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:14px}
+  .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff}
+  .pV{background:var(--oi-teal-dark)} .pA{background:var(--oi-orange)} .pR{background:var(--oi-magenta)}
+  footer{background:var(--oi-purple);color:#B9B0CC;text-align:center;padding:26px;font-size:12.5px;margin-top:44px} footer b{color:#fff}
+  @media print{.nav{display:none} pre{white-space:pre-wrap} .step{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="brandbar"></div>
+<nav class="nav">
+  <a href="index.html">Inicio</a>
+  <a href="reporte_ejecutivo.html">Reporte Ejecutivo</a>
+  <a href="resumen_tecnico.html">Resumen Técnico</a>
+  <a href="paso_a_paso.html" class="here">Paso a Paso</a>
+  <a href="proximos_pasos_produccion.html">Próximos Pasos (Producción)</a>
+</nav>
+<header>
+  <span class="doc-tag">Documento 3 · Paso a Paso Detallado — ejecutado en Sandbox</span>
+  <h1>Instalación, pruebas e incidencias resueltas en Sandbox</h1>
+  <p class="sub">Bitácora granular de lo que se hizo realmente en el ambiente Sandbox (3872541-sb1): despliegue de scripts, creación de accesos, corridas reales de prueba con sus datos, y las incidencias técnicas que aparecieron y cómo se resolvieron.</p>
+</header>
+<main>
+
+  <h2>Contexto de la ejecución</h2>
+  <ul>
+    <li><b>Ambiente:</b> Sandbox de Opportunity International Nicaragua (<code>3872541-sb1.app.netsuite.com</code>).</li>
+    <li><b>Rol de instalación:</b> OI Gerencia Finanzas Producción (administrador).</li>
+    <li><b>Rol de prueba:</b> Coordinador de Producción (basado en Centro clásico).</li>
+    <li><b>Resultado:</b> instalación completa, dos corridas de proceso exitosas (lote único y lotes múltiples).</li>
+  </ul>
+
+  <h2>Parte A · Instalación</h2>
+
+  <div class="step"><h3><span class="num">1</span>Subir los archivos al File Cabinet</h3>
+    <p>Documentos → Archivos → SuiteScripts. Se creó la carpeta <code>OI_CargaProduccion</code> y se subieron los 4 archivos en la <b>misma carpeta</b> (se referencian por ruta relativa):</p>
+    <ul>
+      <li><code>oi_lib_produccion.js</code> (librería)</li>
+      <li><code>oi_sl_carga_produccion.js</code> (Suitelet)</li>
+      <li><code>oi_ue_wo_boton_carga.js</code> (User Event)</li>
+      <li><code>oi_cs_wo_boton_carga.js</code> (Client Script)</li>
+    </ul>
+    <div class="note"><b>Regla crítica:</b> si los 4 archivos no quedan juntos en la misma carpeta, la referencia relativa falla y el módulo no carga.</div>
+  </div>
+
+  <div class="step"><h3><span class="num">2</span>Crear el Script + Deployment del Suitelet</h3>
+    <p>Personalización → Scripting → Scripts → Nuevo → seleccionar <code>oi_sl_carga_produccion.js</code> → Crear registro de script (NetSuite detecta el tipo <b>Suitelet</b>).</p>
+    <ul>
+      <li>Nombre: <code>OI - Carga de Producción (Suitelet)</code> · ID: <code>customscript_oi_sl_carga_prod</code></li>
+      <li>Deployment ID: <code>customdeploy_oi_sl_carga_prod</code></li>
+      <li>Se obtuvo la URL interna del Suitelet: <code>/app/site/hosting/scriptlet.nl?script=1907&amp;deploy=1</code></li>
+    </ul>
+  </div>
+
+  <div class="step"><h3><span class="num">3</span>Crear el Script + Deployment del User Event</h3>
+    <p>Mismo camino, seleccionando <code>oi_ue_wo_boton_carga.js</code> (tipo <b>User Event</b>).</p>
+    <ul>
+      <li>Nombre: <code>OI - Botón Carga de Producción (UE)</code> · ID: <code>customscript_oi_ue_wo_carga_btn</code></li>
+      <li>Deployment aplicado a <b>Orden de trabajo</b>, ID <code>customdeploy_oi_ue_wo_carga_btn</code></li>
+      <li>El Client Script no lleva registro propio: lo carga el User Event por ruta.</li>
+    </ul>
+  </div>
+
+  <div class="step"><h3><span class="num">4</span>Crear el enlace de menú (acceso tipo lista)</h3>
+    <p>Se creó un <b>Vínculo de centro</b> (Configuración → Personalización → Vínculos centrales) etiquetado "Carga de Producción" con la URL del Suitelet, y luego una <b>Categoría del centro</b> para colocarlo en el menú:</p>
+    <ul>
+      <li>Tipo de centro: <b>Centro clásico</b> (el que usa el rol Coordinador de Producción — confirmado en la definición del rol).</li>
+      <li>Ficha central: <b>Transacciones</b>. Etiqueta del grupo: <b>Producción</b>.</li>
+    </ul>
+    <p>Resultado: menú <b>Transacciones → Producción → Carga de Producción</b>, junto al listado de Órdenes de Trabajo.</p>
+  </div>
+
+  <div class="step"><h3><span class="num">5</span>Prueba de humo</h3>
+    <p>Se abrió una Orden de Trabajo existente (con "Ver"): apareció el botón <b>Carga de Producción</b> junto a Editar/Atrás. Al pulsarlo abrió el Suitelet y su interfaz de carga. El enlace de menú abrió la misma interfaz. Los tres scripts corriendo correctamente.</p>
+    <div class="note"><b>Nota de comportamiento:</b> el botón solo aparece al <b>ver o editar</b> una OT existente (no al crear una nueva), y las listas nativas no llevan botón — por eso el acceso principal es el enlace de menú.</div>
+  </div>
+
+  <h2>Parte B · Incidencias encontradas y resueltas</h2>
+  <p class="lead">Durante las pruebas aparecieron tres incidencias técnicas, todas de "plomería" (no de lógica de negocio). Se documentan porque forman parte del aprendizaje y aplican también al pase a Producción.</p>
+
+  <div class="bug"><h4>Incidencia 1 · El POST llegaba como cuerpo no-JSON</h4>
+    <p><span class="lbl">Síntoma:</span> al validar/procesar, el servidor respondía <code>Cuerpo JSON invalido: Unexpected token _ in JSON at position 0</code>.</p>
+    <p><span class="lbl">Causa:</span> NetSuite no entregaba el cuerpo crudo del POST como JSON; el diagnóstico mostró que llegaban los campos internos del formulario (<code>_eml_nkey_=...</code>).</p>
+    <p><span class="lbl">Solución:</span> la interfaz ahora envía el payload como parámetro de formulario (<code>payload=</code>) y el servidor lo lee de <code>context.request.parameters.payload</code>.</p>
+  </div>
+
+  <div class="bug"><h4>Incidencia 2 · Los botones enviaban el formulario nativo</h4>
+    <p><span class="lbl">Síntoma:</span> al pulsar "Validar"/"Procesar", la página navegaba a una pantalla con el JSON (envío del formulario de NetSuite), en vez de ejecutar la llamada AJAX.</p>
+    <p><span class="lbl">Causa:</span> un <code>&lt;button&gt;</code> dentro del formulario de NetSuite, sin <code>type="button"</code>, actúa como botón de envío.</p>
+    <p><span class="lbl">Solución:</span> se añadió <code>type="button"</code> a ambos botones y <code>preventDefault()</code> en sus manejadores. Resuelto de raíz.</p>
+  </div>
+
+  <div class="bug"><h4>Incidencia 3 · Parámetro incorrecto en N/query</h4>
+    <p><span class="lbl">Síntoma:</span> la validación fallaba con <code>SSS_INVALID_TYPE_ARG: ...options.query</code>.</p>
+    <p><span class="lbl">Causa:</span> se invocaba <code>runSuiteQL</code> con la propiedad <code>sqlQuery</code>.</p>
+    <p><span class="lbl">Solución:</span> se corrigieron las tres llamadas para usar la propiedad correcta <code>query</code>.</p>
+  </div>
+
+  <h2>Parte C · Corridas de prueba reales (con datos)</h2>
+
+  <h3>Validación de inventario — los tres semáforos</h3>
+  <p>Se comprobó que la validación previa funciona en sus tres escenarios:</p>
+  <ul>
+    <li><span class="pill pR">ROJO</span> Lotes inexistentes: al cargar el ejemplo del 16-jul (lotes que no existen en Sandbox), todos los lotes de MP se marcaron "no existe en inventario" y el proceso quedó bloqueado.</li>
+    <li><span class="pill pA">ÁMBAR</span> Faltante parcial: al reusar lotes ya consumidos, el sistema avisó el faltante y ofreció usar el disponible del ERP.</li>
+    <li><span class="pill pV">VERDE</span> Stock suficiente: con lotes reales aprobados, todo salió OK y se habilitó el proceso.</li>
+  </ul>
+
+  <h3>Corrida 1 · Lote único de producto terminado</h3>
+  <table>
+    <tr><th>Parámetro</th><th>Valor</th></tr>
+    <tr><td>SKU / Fecha</td><td>01 / 24/07/2026</td></tr>
+    <tr><td>Input (materia prima)</td><td>59,900.00 kg (4 lotes 05-MP-C, Clase B y C)</td></tr>
+    <tr><td>Output / Lote PT</td><td>16,059.00 kg → lote <code>072426-01</code></td></tr>
+    <tr><td>FC objetivo → alcanzado</td><td>3.73 → <b>3.73</b> (agua ZH calculada 16,578.8; prensado 45%)</td></tr>
+    <tr><td>Transacciones creadas</td><td>Orden de Trabajo <b>#1713</b> (liberada) + Compleción <b>#800</b></td></tr>
+    <tr><td>Ajustes automáticos</td><td>Fibra #54476 y Cáscara #54477 (generados por el UserEvent GTZ existente)</td></tr>
+  </table>
+  <div class="ok">La OT quedó con ensamble 01-01-COV, BOM COV, ruta FP COV, WIP, Mass Balance activo, Fibra-41, 01-Cascara y componentes MS-53/MS-18/MS-02. La Compleción registró el PT en depósito Producto Terminado / Inspection / caducidad 24/07/2028.</div>
+
+  <h3>Corrida 2 · Lotes múltiples de producto terminado (flujo de 2 pasos)</h3>
+  <table>
+    <tr><th>Parámetro</th><th>Valor</th></tr>
+    <tr><td>SKU / Fecha</td><td>01 / 25/07/2026</td></tr>
+    <tr><td>Input (materia prima)</td><td>43,300.00 kg (3 lotes 05-MP-C, Clase B y C)</td></tr>
+    <tr><td>Output / Lotes PT</td><td>11,600.00 kg → <code>072526-01</code> (7,000) + <code>072626-01</code> (4,600)</td></tr>
+    <tr><td>FC objetivo → alcanzado</td><td>3.73 → <b>3.73</b> (agua ZH calculada 8,155.2)</td></tr>
+    <tr><td>Transacciones creadas</td><td>Orden de Trabajo + Compleción con los dos lotes PT separados</td></tr>
+  </table>
+  <div class="ok">Se confirmó en el detalle de inventario de la Compleción que los dos lotes de producto terminado quedaron correctamente separados (7,000 y 4,600 kg), ambos en Producto Terminado / Inspection / caducidad 25/07/2028. Validó el flujo de dos pasos requerido por la limitación de NetSuite.</div>
+
+  <h2>Parte D · Publicación en Sandbox</h2>
+  <p>Tras las pruebas exitosas, se dejaron ambos deployments listos para el piloto con el equipo:</p>
+  <table>
+    <tr><th>Deployment</th><th>Estado</th><th>Nivel de registro</th><th>Audiencia</th></tr>
+    <tr><td>Suitelet (<code>customdeploy_oi_sl_carga_prod</code>)</td><td>Publicado (Released)</td><td>Auditoría</td><td>Rol Coordinador de Producción</td></tr>
+    <tr><td>User Event (<code>customdeploy_oi_ue_wo_carga_btn</code>)</td><td>Publicado (Released)</td><td>Auditoría</td><td>Rol Coordinador de Producción</td></tr>
+  </table>
+  <div class="note"><b>Formato del archivo de carga.</b> El módulo acepta CSV y JSON. El JSON recomendado incluye: <code>fecha</code>, <code>sku</code>, <code>inputKg</code>, <code>outputKg</code>, <code>fibraKg</code>, <code>cascarillaKg</code>, porcentajes (<code>pctLodo</code>, <code>pctCascarilla</code>, <code>pctFibra</code>), <code>fcBruto</code>, <code>minutos</code>, el bloque <code>ms</code> (MS53/MS18/MS02/MS04), y los arreglos <code>lotesPT</code> y <code>materiaPrima</code>. El agua de ralladora ZH y el % de prensado NO se cargan: los calcula el sistema.</div>
+
+</main>
+<footer><b>Opportunity International Nicaragua</b> · Coordinación de Producción · Paso a Paso Detallado (Sandbox) · Julio 2026</footer>
+</body>
+</html>
